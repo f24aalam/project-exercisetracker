@@ -23,7 +23,37 @@ module.exports = {
   },
   find: async (req, res) => {
     const { _id } = req.params;
-    const user = await User.findById(_id).populate('excercises', 'description duration date');
+
+    var excerciseOptions = {
+      path: 'excercises', 
+      select: 'description duration date',
+      match: {},
+      options: {}
+    };
+
+    if (req.query.limit) {
+      excerciseOptions.options.limit = req.query.limit;
+    }
+
+    if (req.query.from) {
+      excerciseOptions.match = {
+        date: {
+          $gte: req.query.from
+        }
+      }
+    }
+
+    if (req.query.to) {
+      excerciseOptions.match = {
+        date: {
+          $lte: req.query.to
+        }
+      }
+    }
+
+    console.log(excerciseOptions);
+
+    const user = await User.findById(_id).populate(excerciseOptions);
     
     return res.json({
       _id: user._id,
