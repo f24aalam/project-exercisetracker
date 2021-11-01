@@ -23,7 +23,13 @@ module.exports = {
   },
   find: async (req, res) => {
     const { _id } = req.params;
-    const user = await User.findById(_id).populate('exercises');
-    console.log(user);
+    const user = await User.findById(_id).populate('excercises', 'description duration date');
+    
+    return res.json({
+      _id: user._id,
+      username: user.username,
+      count: user.excercises.length,
+      log: user.excercises
+    });
   },
 };

@@ -1,15 +1,13 @@
 const mongoose = require('mongoose');
 const UserSchema = new mongoose.Schema({
-    username :{
+    username : {
         type: String,
         required: true
     },
-    exercises : [
-        {
+    excercises : [{
           type: mongoose.Schema.Types.ObjectId,
           ref: 'Excercise'
-        }
-    ]
+    }]
 },{
     timestamps: true
 })

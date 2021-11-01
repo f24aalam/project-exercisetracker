@@ -10,14 +10,16 @@ const ExcerciseSchema = new mongoose.Schema({
     },
     date: {
       type: Date,
-      default: Date.now
+      default: Date.now,
+      get: v => (new Date(v)).toDateString()
     },
     user: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'User'
     }
 },{
-    timestamps: true
+    timestamps: true,
+    toJSON: { getters: true, virtuals: false, }
 })
 
 module.exports = mongoose.model('Excercise', ExcerciseSchema);

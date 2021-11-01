@@ -13,28 +13,28 @@ module.exports = {
         user: req.params._id
       })
 
-      const user = await User.findById(req.params._id)
-      user.excercises.push(excercise);
-      await user.save();
-
-      await excercise.populate('user');
+      const user = await User.findOneAndUpdate(
+        { _id: req.params._id},
+        { $push: { excercises: excercise }},
+        { new: true }
+      )
+      .exec();
 
       return res.json({
-        _id: excercise.user._id,
-        username: excercise.user.username,
+        _id: user._id,
+        username: user.username,
         date: (new Date(excercise.date)).toDateString(),
         duration: excercise.duration,
         description: excercise.description
       })
     } catch (error) {
-      console.log(error)
-      // if (error.errors.description) {
-      //   return res.send(error.errors.description.properties.message)
-      // }
+      if (error.errors.description) {
+        return res.send(error.errors.description.properties.message)
+      }
 
-      // if (error.errors.duration) {
-      //   return res.send(error.errors.duration.properties.message)
-      // }
+      if (error.errors.duration) {
+        return res.send(error.errors.duration.properties.message)
+      }
     }
   }
 }
